@@ -44,6 +44,8 @@ class Bohu::Command::Dialect < Hash
   # @param [Symbol] name
   # @param [Boolean|String] value
   # @param [Hash] input
+  #
+  # @return [Array<String>|nil]
   def process_option(name, value, input = {})
     trans = self.fetch(name)
     vbool = [true, false].include?(trans[1])
@@ -53,6 +55,11 @@ class Bohu::Command::Dialect < Hash
   end
 
   class << self
+    # Load a dialect for given command and type.
+    #
+    # @param [String|Symbol] command name
+    # @param [String|Symbol] type name, example: ``default``
+    # @return [self]
     def load(command, type)
       paths.each do |path|
         begin
@@ -77,9 +84,13 @@ class Bohu::Command::Dialect < Hash
       end.reverse
     end
 
+    # Load a file by given filepath.
+    #
+    # @param [String] filepath
     # @raise [Errno::ENOENT]
-    def file(file)
-      Pathname.new(file).realpath.read.tap do |content|
+    # @return [self]
+    def file(filepath)
+      Pathname.new(filepath).realpath.read.tap do |content|
         return self.new(YAML.safe_load(content))
       end
     end
