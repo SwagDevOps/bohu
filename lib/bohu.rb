@@ -11,5 +11,27 @@ require "#{__dir__}/bohu/locked"
 
 # Bohu module
 module Bohu
-  autoload :VERSION, "#{__dir__}/bohu/version"
+  singleton_class.include(self)
+
+  {
+    VERSION: 'version',
+    Config: 'config',
+    Command: 'command',
+    DotHash: 'dot_hash',
+    Shell: 'shell',
+  }.each do |k, v|
+    autoload k, "#{__dir__}/bohu/#{v}"
+  end
+
+  # @return [Config]
+  def config
+    mutex = Mutex.new
+
+    mutex.synchronize { @config ||= Config.new }
+  end
+
+  # @raise [SystemExit]
+  def sh(*cmd)
+    Shell.__send__(:sh, *cmd)
+  end
 end
