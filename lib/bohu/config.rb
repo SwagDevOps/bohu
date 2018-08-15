@@ -7,39 +7,19 @@
 # There is NO WARRANTY, to the extent permitted by law.
 
 require_relative '../bohu'
+require_relative 'config_base'
 
-class Bohu::Config < Bohu::DotHash
-  # @param [Hash]
-  # @return [Hash]
-  def deep_merge(other_hash)
-    self.class.__send__(:deep_merge, self.clone.to_h, other_hash.to_h)
-  end
+# Config with dot access notation.
+class Bohu::Config < Bohu::ConfigBase
+  autoload :YAML, 'yaml'
+  autoload :Pathname, 'pathname'
 
-  # @param [Hash]
-  # @return [self]
-  def deep_merge!(other_hash)
-    merged = deep_merge(other_hash)
-
-    self.clear.tap do
-      merged.each { |k, v| self[k] = v }
-    end
-  end
-
-  class << self
-    protected
-
-    # @param target [Hash] target **altered** hash
-    # @param origin [Hash]
-    # @return the modified target hash
-    #
-    # @note this method does not merge Arrays
-    def deep_merge(target, origin)
-      target.merge!(origin) do |key, oldval, newval|
-        hashable = oldval.is_a?(Hash) and newval.is_a?(Hash)
-
-        newval = deep_merge(oldval, newval) if hashable
-
-        newval
+  def initialize(filepath = nil)
+    (filepath || "#{__dir__}/config.yml").tap do |fp|
+      Pathname.new(fp).read.tap do |content|
+        YAML.safe_load(content, [Symbol]).tap do |parsed|
+          super(parsed)
+        end
       end
     end
   end
