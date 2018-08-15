@@ -1,0 +1,4 @@
+---
+system: ['-S', true]
+login_shell: ['-s', '%<login_shell>s']
+assign_password: ['-D', false]
