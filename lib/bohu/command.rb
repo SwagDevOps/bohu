@@ -13,7 +13,7 @@ class Bohu::Command
   autoload :Dialect, "#{__dir__}/command/dialect"
   autoload :Runner, "#{__dir__}/command/runner"
 
-  # @param [Bohu::Config
+  # @param [Bohu::Config] config
   def initialize(config = Bohu.config)
     @config = config
   end
