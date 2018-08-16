@@ -10,6 +10,8 @@ require_relative '../bohu'
 require_relative 'config_base'
 
 # Config with dot access notation.
+#
+# Config is loaded from a given filepath and merged recursively with defaults.
 class Bohu::Config < Bohu::ConfigBase
   autoload :YAML, 'yaml'
   autoload :Pathname, 'pathname'
@@ -49,7 +51,7 @@ class Bohu::Config < Bohu::ConfigBase
 
     protected
 
-    # Load given YAM file.
+    # Load given YAML file.
     #
     # @param [String] filepath
     # @return [Hash]
