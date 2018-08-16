@@ -56,9 +56,11 @@ class Bohu::Config < Bohu::ConfigBase
     # @param [String] filepath
     # @return [Hash]
     def safe_load(filepath)
-      Pathname.new(filepath)
-              .read
-              .tap { |content| return YAML.safe_load(content, [Symbol]) }
+      Pathname.new(filepath).read.tap do |content|
+        YAML.safe_load(content, [Symbol]).tap do |parsed|
+          return parsed.nil? ? {} : parsed
+        end
+      end
     end
   end
 end
