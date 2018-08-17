@@ -8,60 +8,135 @@
 
 require_relative '../bohu'
 
-# Config with dot access notation.
-class Bohu::Command
-  autoload :Dialect, "#{__dir__}/command/dialect"
-  autoload :Runner, "#{__dir__}/command/runner"
+# Command using dialect.
+#
+# A command is defined by a ``name`` and an ``action``.
+#
+# Samples of use:
+#
+# ```ruby
+# Command.new('adduser', :create_user)
+#        .call(system: false, login: 'user_name', login_shell: '/bin/bash')
+#
+# Command.new('adduser', :create_user)
+#        .prepare(system: false, login: 'user_name', login_shell: '/bin/bash')
+#        .call
+# ```
+#
+# ## Configuration
+#
+# Sample config:
+#
+# ```yaml
+# commands:
+#   adduser:
+#     dialect: default
+#     executable: adduser
+# ```
+#
+# ``dialect`` is optional, allowing to choose dialect used to transform
+# command into a command line.
+#
+# ``executable`` is optional, otherwise ``name`` is used, and resolved
+# in an UNIX ``which`` similar manner.
+class Bohu::Command < Array
+  include Bohu::Configurable
+  include Bohu::Which
 
-  # @param [Bohu::Config] config
-  def initialize(config = Bohu.config)
-    @config = config
+  autoload :Runner, "#{__dir__}/command/runner"
+  autoload :Dialect, "#{__dir__}/command/dialect"
+
+  # Get command name
+  attr_reader :name
+
+  # Get action name
+  attr_reader :action
+
+  # @param [String|Symbol] name
+  # @param [String|Symbol] action
+  # @param [Bohu::Config|nil] config
+  def initialize(name, action, config = nil)
+    @name = name.to_sym
+    @action = action.to_sym
+
+    # configurable use ``commands`` as root key
+    (@config_root = :commands).tap { super(*[config].compact) }
   end
 
-  # Execute a command.
+  # Get executable
   #
-  # @param [String|Symbol] name command name
-  # @param [String|Symbol] action action name
-  def call(name, action, **kwargs)
-    transform(name, action, **kwargs).tap do |command|
-      Runner.new(command).call
+  # @returns [Pathname|Symbol|String]
+  def executable
+    executable = config[:executable] || name
+
+    find_executable(executable) || executable
+  end
+
+  # @return [Boolean]
+  def executable?
+    !!find_executable(executable)
+  end
+
+  # Prepare command.
+  #
+  # @param [Hash] options
+  # @return [self]
+  def prepare(options = {})
+    self.clear.tap do
+      self.make_cmd(options)
+          .each_with_index { |v, k| self[k] = v }
+    end
+  end
+
+  def call(options = nil)
+    self.clone.tap do |command|
+      command.prepare(options) if options or self.empty?
+
+      return Runner.new(command).call
+    end
+  end
+
+  protected
+
+  # @return [Dialect]
+  def dialect
+    config.public_send(name).tap do |config|
+      return @dialect ||= Dialect.load(name, config[:dialect] || :default)
     end
   end
 
   # Build a command using dialect.
   #
-  # @param [String|Symbol] name command name
-  # @param [String|Symbol] action action name
   # @return [Array<String>]
-  def transform(name, action, **kwargs)
-    make_cmd(name, action, **kwargs)
-  end
-
-  protected
-
-  attr_reader :config
-
-  # @param [String|Symbol] name
-  # @param [String|Symbol] action
-  # @return [Array<String>]
-  def make_cmd(name, action, **kwargs)
-    make_args(name, action, **kwargs).tap do |args|
-      self.config.commands.public_send(name).tap do |config|
-        return [config.executable].push(*args)
+  def make_cmd(**kwargs)
+    make_args(**kwargs).tap do |args|
+      config.public_send(name).tap do |config|
+        return [executable.to_s].push(*args)
       end
     end
   end
 
-  # @param [String|Symbol] name
-  # @param [String|Symbol] action
   # @return [Array<String>]
-  def make_args(name, action, **kwargs)
-    self.config.commands.public_send(name).tap do |config|
-      dialect = Dialect.load(name, config.dialect)
+  def make_args(**kwargs)
+    options = make_options(**kwargs)
 
-      config.actions.public_send(action).tap do |options|
-        return dialect.transform(options.merge(kwargs)).map { |s| s % kwargs }
+    dialect.transform(options.merge(kwargs)).map do |s|
+      begin
+        s % kwargs
+      rescue KeyError => e
+        raise ArgumentError, "missing keyword: #{e.key}"
       end
     end
+  end
+
+  # @return [Hash]
+  def make_options(**kwargs)
+    config.public_send(name).actions.public_send(action).map do |k, v|
+      if v.is_a?(Array)
+        [k, kwargs.key?(k) ? v[0] : v[1]]
+      else
+        [k, v]
+      end
+    end.to_h
   end
 end
