@@ -90,7 +90,7 @@ class Bohu::Command::Dialect < Hash
     # @raise [Errno::ENOENT]
     # @return [self]
     def file(filepath)
-      Pathname.new(filepath).realpath.read.tap do |content|
+      Pathname.new(filepath.to_s).realpath.read.tap do |content|
         return self.new(YAML.safe_load(content))
       end
     end
