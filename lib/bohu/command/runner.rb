@@ -10,10 +10,8 @@ require_relative '../command'
 
 # Command runner.
 class Bohu::Command::Runner < Array
-  include Bohu::Shell
-
   # @raise [SystemExit]
   def call
-    sh(*self)
+    Bohu::Shell.new.sh(*self)
   end
 end

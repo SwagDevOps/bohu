@@ -3,25 +3,50 @@
 require_relative '../bohu'
 require 'English'
 
-# Provide sh method.
-module Bohu::Shell
+# Provide shell.
+#
+# @see Bohu.sh
+class Bohu::Shell
   autoload :Shellwords, 'shellwords'
 
-  singleton_class.include(self)
+  include Bohu::Configurable
+
+  # @raise [SystemExit]
+  # @return [Boolean]
+  def sh(*args)
+    mutex = Mutex.new
+
+    parse_args(*args).tap do |command|
+      warn("# #{Shellwords.join(command)}") if verbose?
+
+      mutex.synchronize do
+        return system(*command).tap do |res|
+          exit($CHILD_STATUS.exitstatus) unless res
+        end
+      end
+    end
+  end
+
+  # Denote shell verbosity.
+  #
+  # @return [Boolean]
+  def verbose?
+    @verbose.nil? ? config[:verbose] : @verbose
+  end
+
+  # Set verbosity.
+  #
+  # @param [Boolean] verbose
+  def verbose=(verbose)
+    @verbose = !!verbose
+  end
 
   protected
 
-  # @raise [SystemExit]
-  def sh(*cmd)
-    mutex = Mutex.new
-
-    cmd.compact.map(&:to_s).tap do |command|
-      warn(command.size == 1 ? command : Shellwords.join(command))
-
-      mutex.synchronize do
-        system(*command)
-          .tap { |res| exit($CHILD_STATUS.exitstatus) unless res }
-      end
-    end
+  # @return [Array<String>]
+  def parse_args(*args)
+    (args.size == 1 ? Shellwords.split(args[0]) : args)
+      .compact
+      .map(&:to_s)
   end
 end
