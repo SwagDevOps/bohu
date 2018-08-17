@@ -12,4 +12,6 @@ describe Bohu, :bohu do
   let(:described_class) { Class.new { include Bohu } }
 
   it { expect(subject).to respond_to(:config).with(0).arguments }
+  it { expect(subject).to respond_to(:config).with(0).arguments }
+  it { expect(subject).to respond_to(:sh).with_unlimited_arguments }
 end
