@@ -65,7 +65,7 @@ class Bohu::Command < Array
 
   # Get executable
   #
-  # @returns [Pathname|Symbol|String]
+  # @return [Pathname|Symbol|String]
   def executable
     executable = config[:executable] || name
 
