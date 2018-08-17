@@ -14,11 +14,13 @@ module Bohu
   singleton_class.include(self)
 
   {
-    VERSION: 'version',
-    Config: 'config',
-    Command: 'command',
-    DotHash: 'dot_hash',
-    Shell: 'shell',
+    VERSION: :version,
+    Config: :config,
+    Configurable: :configurable,
+    Command: :command,
+    DotHash: :dot_hash,
+    Shell: :shell,
+    Which: :which,
   }.each do |k, v|
     autoload k, "#{__dir__}/bohu/#{v}"
   end
