@@ -3,11 +3,17 @@ shell:
   verbose: true
 commands:
   adduser:
-    dialect: default
-    executable: adduser
     actions:
       create_user:
-        system: false
         assign_password: false
-        login_shell: '%<login_shell>s'
+        login_shell:
+          - '%<login_shell>s'
+          - '/bin/bash'
+        login: '%<login>s'
+      create_system_user:
+        system: true
+        assign_password: false
+        login_shell:
+          - '%<login_shell>s'
+          - '/usr/sbin/nologin'
         login: '%<login>s'
