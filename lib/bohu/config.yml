@@ -1,11 +1,13 @@
 ---
+shell:
+  verbose: true
 commands:
   adduser:
     dialect: default
     executable: adduser
     actions:
-      create_system_user:
-        system: true
+      create_user:
+        system: false
         assign_password: false
         login_shell: '%<login_shell>s'
         login: '%<login>s'
