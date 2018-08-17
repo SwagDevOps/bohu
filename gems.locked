@@ -104,6 +104,9 @@ GEM
     unicode_utils (1.4.0)
     wisper (2.0.0)
     yard (0.9.16)
+    yard-coderay (0.1.0)
+      coderay
+      yard
 
 PLATFORMS
   ruby
@@ -121,6 +124,7 @@ DEPENDENCIES
   sham (~> 2.0)
   sys-proc (~> 1.1, >= 1.1.2)
   yard (~> 0.9)
+  yard-coderay (~> 0.1)
 
 BUNDLED WITH
    1.16.2
