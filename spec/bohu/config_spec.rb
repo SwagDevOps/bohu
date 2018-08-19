@@ -18,6 +18,15 @@ describe Bohu::Config, :config do
     it { expect(parsed).to be_a(Hash) }
     it { expect(parsed).to be_empty }
   end
+
+  context '.safe_load' do
+    let(:sample) { sham!(:configs).samples.fetch('invalid_syntax') }
+
+    it do
+      expect { described_class.__send__(:safe_load, sample) }
+        .to raise_error(Psych::SyntaxError)
+    end
+  end
 end
 
 # instance inheritance + methods
