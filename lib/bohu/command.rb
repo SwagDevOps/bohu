@@ -77,14 +77,24 @@ class Bohu::Command < Array
     !!find_executable(executable)
   end
 
+  # Denote command can be prepared.
+  #
+  # @return [Boolean]
+  def preparable?
+    !actions_config[:action].nil?
+  end
+
   # Prepare command.
   #
   # @param [Hash] options
   # @return [self]
   def prepare(options = {})
     self.clear.tap do
-      self.make_cmd(options)
-          .each_with_index { |v, k| self[k] = v }
+      options
+        .map { |k, v| [k, [true, false].include?(v) ? v : v.to_s] }
+        .to_h.tap do |kwargs|
+        self.make_cmd(kwargs).each_with_index { |v, k| self[k] = v }
+      end
     end
   end
 
