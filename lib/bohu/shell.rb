@@ -17,7 +17,7 @@ class Bohu::Shell
     mutex = Mutex.new
 
     parse_args(*args).tap do |command|
-      warn("# #{Shellwords.join(command)}") if verbose?
+      warn(Shellwords.join(command)) if verbose?
 
       mutex.synchronize do
         return system(*command).tap do |res|
