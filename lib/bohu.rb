@@ -18,6 +18,7 @@ module Bohu
     Config: :config,
     Configurable: :configurable,
     Command: :command,
+    Commands: :commands,
     DotHash: :dot_hash,
     Shell: :shell,
     Which: :which,
