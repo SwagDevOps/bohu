@@ -81,7 +81,7 @@ class Bohu::Command < Array
   #
   # @return [Boolean]
   def preparable?
-    !actions_config[:action].nil?
+    !actions_config[action].nil?
   end
 
   # Prepare command.
