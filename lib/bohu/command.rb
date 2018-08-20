@@ -105,6 +105,20 @@ class Bohu::Command < Array
     end
   end
 
+  # @todo better error handling
+  #
+  # @return [Bohu::DotHash]
+  def actions_config
+    config.public_send(name).actions
+  end
+
+  # @todo better error handling
+  #
+  # @return [Bohu::DotHash]
+  def action_config
+    actions_config.public_send(action)
+  end
+
   # Build a command using dialect.
   #
   # @return [Array<String>]
@@ -131,7 +145,7 @@ class Bohu::Command < Array
 
   # @return [Hash]
   def make_options(**kwargs)
-    config.public_send(name).actions.public_send(action).map do |k, v|
+    action_config.map do |k, v|
       if v.is_a?(Array)
         [k, kwargs.key?(k) ? v[0] : v[1]]
       else
