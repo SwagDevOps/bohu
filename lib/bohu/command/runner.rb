@@ -10,8 +10,26 @@ require_relative '../command'
 
 # Command runner.
 class Bohu::Command::Runner < Array
+  # @return [Bohu::Config|Hash]
+  attr_reader :config
+
+  # @param [Array] command
+  # @param [Bohu::Config] config
+  def initialize(command, config = Bohu.config)
+    self.push(*command)
+
+    @config = config.clone.freeze
+  end
+
   # @raise [SystemExit]
   def call
-    Bohu::Shell.new.sh(*self)
+    shell.sh(*self)
+  end
+
+  protected
+
+  # @return [Bohu::Shell]
+  def shell
+    Bohu::Shell.new(config)
   end
 end
