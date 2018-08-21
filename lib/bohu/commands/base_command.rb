@@ -8,7 +8,7 @@
 
 require_relative '../commands'
 
-# @bastract
+# @abstract
 class Bohu::Commands::BaseCommand
   include Bohu::Configurable
 
