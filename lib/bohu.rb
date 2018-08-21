@@ -35,6 +35,6 @@ module Bohu
 
   # @raise [SystemExit]
   def sh(*cmd)
-    Shell.__send__(:sh, *cmd)
+    Shell.new(config).sh(*cmd)
   end
 end
