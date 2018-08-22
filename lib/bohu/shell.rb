@@ -11,6 +11,8 @@ class Bohu::Shell
 
   include Bohu::Configurable
 
+  autoload :Capture, "#{__dir__}/shell/capture"
+
   # @raise [SystemExit]
   # @return [Boolean]
   def sh(*args)
@@ -25,6 +27,16 @@ class Bohu::Shell
         end
       end
     end
+  end
+
+  # @return [Capture::Capture]
+  def capture(*args)
+    capturable(*args).capture
+  end
+
+  # @return [Capture::Capture]
+  def capture!(*args)
+    capturable(*args).capture!
   end
 
   # Denote shell verbosity.
@@ -50,5 +62,10 @@ class Bohu::Shell
     (args.size == 1 ? Shellwords.split(args[0]) : args)
       .compact
       .map(&:to_s)
+  end
+
+  # @return [Capture]
+  def capturable(*args)
+    Capture.new(parse_args(*args))
   end
 end
