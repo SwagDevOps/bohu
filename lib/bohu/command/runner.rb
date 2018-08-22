@@ -18,7 +18,7 @@ class Bohu::Command::Runner < Array
   def initialize(command, config = Bohu.config)
     self.push(*command)
 
-    @config = config.clone.freeze
+    @config = Bohu::ConfigBase.new(config).clone.freeze
   end
 
   # @raise [SystemExit]
