@@ -28,9 +28,9 @@ module Bohu
 
   # @return [Config]
   def config
-    mutex = Mutex.new
+    @config_mutex ||= Mutex.new
 
-    mutex.synchronize { @config ||= Config.new }
+    @config_mutex.synchronize { @config ||= Config.new }
   end
 
   # @raise [SystemExit]
