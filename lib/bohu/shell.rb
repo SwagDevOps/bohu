@@ -14,12 +14,12 @@ class Bohu::Shell
   # @raise [SystemExit]
   # @return [Boolean]
   def sh(*args)
-    mutex = Mutex.new
+    @mutex_sh ||= Mutex.new
 
     parse_args(*args).tap do |command|
       warn(Shellwords.join(command)) if verbose?
 
-      mutex.synchronize do
+      @mutex_sh.synchronize do
         return system(*command).tap do |res|
           exit($CHILD_STATUS.exitstatus) unless res
         end
