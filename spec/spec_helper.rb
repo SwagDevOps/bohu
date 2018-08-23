@@ -11,6 +11,7 @@ end
 [
   :constants,
   :configure,
+  :env,
 ].each do |req|
   require_relative '%<dir>s/%<req>s' % {
     dir: __FILE__.gsub(/\.rb$/, ''),
