@@ -69,3 +69,18 @@ describe Bohu::Command::Runner, :'command/runner' do
     end
   end
 end
+
+# testing execptions
+describe Bohu::Command::Runner, :'command/runner' do
+  let(:subject) { described_class.new(command, shell: {}) }
+  let(:command) { ['false'] } # exit 1
+
+  context '#call' do
+    it do
+      silence_stream($stderr) do
+        expect { subject.call }.to raise_error(Bohu::Shell::ExitStatusError)
+        expect { subject.call }.to raise_error('"false" exited with status: 1')
+      end
+    end
+  end
+end
