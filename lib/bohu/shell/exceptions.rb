@@ -11,7 +11,7 @@ class Bohu::Shell::CommandLineError < StandardError
 
   # @param [Array<String>|String] command
   def initialize(command)
-    @command = command
+    self.command = command
   end
 
   # @return [String]
