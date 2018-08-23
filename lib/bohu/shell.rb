@@ -12,18 +12,20 @@ class Bohu::Shell
   include Bohu::Configurable
 
   autoload :Capture, "#{__dir__}/shell/capture"
+  autoload :Result, "#{__dir__}/shell/result"
+  autoload :ExitStatusError, "#{__dir__}/shell/exceptions"
 
-  # @raise [SystemExit]
+  # @raise [ExitStatusError]
   # @return [Boolean]
   def sh(*args)
-    @mutex_sh ||= Mutex.new
+    self.class.__send__(:mutex).synchronize do
+      parse_args(*args).tap do |command|
+        warn(Shellwords.join(command)) if verbose?
 
-    parse_args(*args).tap do |command|
-      warn(Shellwords.join(command)) if verbose?
-
-      @mutex_sh.synchronize do
-        return system(*command).tap do |res|
-          exit($CHILD_STATUS.exitstatus) unless res
+        system(*command).tap do |b|
+          return Result.new($CHILD_STATUS).tap do |result|
+            raise ExitStatusError.new(command, result) unless b
+          end
         end
       end
     end
@@ -53,6 +55,14 @@ class Bohu::Shell
   # @param [Boolean] verbose
   def verbose=(verbose)
     @verbose = !!verbose
+  end
+
+  (@mutex = Mutex.new).tap do
+    class << self
+      protected
+
+      attr_accessor :mutex
+    end
   end
 
   protected

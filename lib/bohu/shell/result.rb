@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../capture'
+require_relative '../shell'
 
 # Capture result.
-class Bohu::Shell::Capture::Result
+class Bohu::Shell::Result
   # @return [String]
   attr_reader :stdout
 
@@ -13,13 +13,16 @@ class Bohu::Shell::Capture::Result
   # @return [Process::Status]
   attr_reader :status
 
+  # @param [Process::Status] status
   # @param [String] stdout
   # @param [String] stderr
-  # @param [Process::Status] status
-  def initialize(stdout, stderr, status)
+  #
+  # @raise [TypeError]
+  # @see #status
+  def initialize(status, stdout: nil, stderr: nil)
+    self.status = status
     @stdout = stdout
     @stderr = stderr
-    @status = status
   end
 
   # @return [Boolean]
@@ -35,5 +38,17 @@ class Bohu::Shell::Capture::Result
   # @return [Integer]
   def exitstatus
     status.exitstatus
+  end
+
+  protected
+
+  # @raise [TypeError]
+  # @param [Process::Status] status
+  def status=(status)
+    unless status.respond_to?(:exitstatus)
+      raise TypeError, "#{status.class} must respond to: exitstatus"
+    end
+
+    @status = status
   end
 end
