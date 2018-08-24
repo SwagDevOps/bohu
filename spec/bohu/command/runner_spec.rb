@@ -70,7 +70,7 @@ describe Bohu::Command::Runner, :'command/runner' do
   end
 end
 
-# testing execptions
+# testing exceptions
 describe Bohu::Command::Runner, :'command/runner' do
   let(:subject) { described_class.new(command, shell: {}) }
   let(:command) { ['false'] } # exit 1
