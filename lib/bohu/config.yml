@@ -1,7 +1,14 @@
 ---
 shell:
   verbose: true
+utils:
+  verbose: true
 commands:
+  usermod:
+    actions:
+      change_shell:
+        login_shell: '%<login_shell>s'
+        login: '%<login>s'
   adduser:
     actions:
       create_user:
@@ -9,11 +16,4 @@ commands:
         login_shell:
           - '%<login_shell>s'
           - '/bin/bash'
-        login: '%<login>s'
-      create_system_user:
-        system: true
-        assign_password: false
-        login_shell:
-          - '%<login_shell>s'
-          - '/usr/sbin/nologin'
         login: '%<login>s'
