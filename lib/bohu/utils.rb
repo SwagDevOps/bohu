@@ -22,13 +22,12 @@ class Bohu::Utils
 
   # @see Bohu::Shell.sh
   def sh(*cmd)
-    Bohu::Shell.new(config_base).sh(*cmd)
+    shell.sh(*cmd)
   end
 
   # @return [Boolean]
   def verbose?
-    return true unless config.key?(:verbose)
-    !!config[:verbose]
+    config.key?(:verbose) ? !!config[:verbose] : true
   end
 
   # @return [Array<Symbol>]
@@ -41,5 +40,18 @@ class Bohu::Utils
       %i[remove_entry_secure remove_file rm rm_f rm_r rm_rf rmdir rmtree],
       %i[ruby safe_ln safe_unlink sh split_all symlink touch uptodate?],
     ].flatten).sort
+  end
+
+  protected
+
+  # Get shell.
+  #
+  # Sheel verbosity is consistent with utils (``FileUtils``) verbosity.
+  #
+  # @return [Bohu::Shell]
+  def shell
+    @shell ||= Bohu::Shell
+               .new(shell: {})
+               .tap { |shell| shell.verbose = verbose? }
   end
 end
