@@ -12,26 +12,34 @@ require_relative '../bohu'
 module Bohu::Configurable
   singleton_class.include(self)
 
-  # @param [Bohu::Config] config
-  def initialize(config = Bohu.config)
-    config.freeze.tap do |c|
-      @config = Bohu::ConfigBase.new(c)
+  # @return [Bohu::ConfigBase]
+  attr_reader :config
 
-      config_root.to_s.split('.').each { |m| @config = @config.public_send(m) }
+  # @param [Bohu::Config|Hash|nil] config
+  def initialize(config = nil)
+    (config.nil? ? Bohu.config : config).freeze.tap do |c|
+      @config_base = Bohu::ConfigBase.new(c)
+      @config = @config_base.clone
+
+      config_root.to_s.split('.').each do |m|
+        @config = @config.class.new(@config.public_send(m))
+      end
+      @config.freeze
     end
   end
 
   class << self
-    def included(*)
-      attr_reader :config
-    end
-
     define_method(:new) do |*args|
       ::Class.new { include Bohu::Configurable }.new(*args)
     end
   end
 
   protected
+
+  # Get base config.
+  #
+  # @return [Bohu::ConfigBase]
+  attr_reader :config_base
 
   # Get root config key.
   #
