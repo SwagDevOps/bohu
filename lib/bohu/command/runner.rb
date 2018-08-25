@@ -15,10 +15,10 @@ class Bohu::Command::Runner < Array
 
   # @param [Array] command
   # @param [Bohu::Config] config
-  def initialize(command, config = Bohu.config)
+  def initialize(command, config = nil)
     self.push(*command)
 
-    @config = Bohu::ConfigBase.new(config).clone.freeze
+    @config = Bohu::Configurable.new(config).config
   end
 
   # @raise [SystemExit]
