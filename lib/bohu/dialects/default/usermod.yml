@@ -1,0 +1,10 @@
+---
+home: ['--home', '%<home>s']
+gid: ['--gid', '%<gid>s']          # force use GROUP as new primary group
+groups: ['--groups', '%<groups>s'] # new list of supplementary GROUPS
+append: ['--append', false]
+lock: ['--lock', false]
+unlock: ['--unlock', false]
+login_shell: ['--shell', '%<login_shell>s']
+new_login: ['--login', '%<new_login>s']
+move_home: ['--move-home', '%<move_home>s']
