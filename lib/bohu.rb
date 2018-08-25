@@ -21,20 +21,57 @@ module Bohu
     Commands: :commands,
     DotHash: :dot_hash,
     Shell: :shell,
+    Utils: :utils,
     Which: :which,
   }.each do |k, v|
     autoload k, "#{__dir__}/bohu/#{v}"
   end
 
+  # Get config.
+  #
   # @return [Config]
   def config
-    @config_mutex ||= Mutex.new
+    {
+      filepath: ENV['BOHU_CONFIG'],
+      load_defaults: !!ENV['BOHU_CONFIG_LOAD_DEFAULTS'],
+    }.tap { |kwargs| config_load(kwargs) if @config.nil? }
 
-    @config_mutex.synchronize { @config ||= Config.new }
+    @config
   end
 
-  # @raise [SystemExit]
-  def sh(*cmd)
-    Shell.new(config).sh(*cmd)
+  # Load config for given filepath.
+  #
+  # @return [Config]
+  def config_load(filepath: nil, load_defaults: true)
+    (@config_mutex ||= Mutex.new).synchronize do
+      @config = Config.new(filepath, load_defaults: load_defaults)
+    end
+  end
+
+  # @see #instance_for
+  def method_missing(method, *args, &block)
+    return super unless respond_to_missing?(method)
+
+    return instance_for(method).public_send(method, *args, &block)
+  end
+
+  # @see #instance_for
+  def respond_to_missing?(method, include_private = false)
+    instance_for(method).nil? ? super : true
+  end
+
+  # Get instance for given method.
+  #
+  # @return [Object|nil]
+  def instance_for(method)
+    [
+      -> { Utils.new(config) },
+    ].each do |callable|
+      callable
+        .call
+        .tap { |instance| return instance if instance.respond_to?(method) }
+    end
+
+    nil
   end
 end
