@@ -18,15 +18,8 @@ module Bohu::Configurable
   # @param [Bohu::Config|Hash|nil] config
   def initialize(config = nil)
     (config.nil? ? Bohu.config : config).freeze.tap do |c|
-      @config = @config_base = Bohu::ConfigBase.new(c)
-
-      unless config_root.nil?
-        @config = @config_base.clone
-        config_root.to_s.split('.').each do |m|
-          @config = @config.class.new(@config.public_send(m))
-        end
-      end
-
+      @config_base = Bohu::ConfigBase.new(c)
+      configure(config_base)
       [@config_base, @config].map(&:freeze)
     end
   end
@@ -56,5 +49,23 @@ module Bohu::Configurable
           .gsub(/([a-z\d])([A-Z])/, '\1_\2')
           .tr('-', '_').downcase
     end.join('.')
+  end
+
+  # @param [Bohu::ConfigBase] config
+  # @return [self]
+  def configure(config)
+    unless config_root.nil?
+      config = config.clone
+      config_root.to_s.split('.').each do |m|
+        # Allow config_root not to exist
+        (config.respond_to?(m) ? config.public_send(m) : {}).tap do |v|
+          config = config.class.new(v)
+        end
+      end
+    end
+
+    @config = config
+
+    return self
   end
 end
