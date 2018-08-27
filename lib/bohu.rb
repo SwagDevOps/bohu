@@ -20,6 +20,7 @@ module Bohu
     Command: :command,
     Commands: :commands,
     DotHash: :dot_hash,
+    Etc: :etc,
     Shell: :shell,
     Utils: :utils,
     Which: :which,
@@ -65,6 +66,7 @@ module Bohu
   # @return [Object|nil]
   def instance_for(method)
     [
+      -> { Etc.new(config) },
       -> { Utils.new(config) },
     ].each do |callable|
       callable
