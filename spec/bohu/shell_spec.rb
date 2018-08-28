@@ -10,6 +10,7 @@ end
 describe Bohu::Shell, :shell do
   let(:subject) { described_class.new(shell: {}) }
 
+  it { expect(subject).to be_a(Bohu::Configurable) }
   it { expect(subject).to respond_to(:sh).with_unlimited_arguments }
 end
 
