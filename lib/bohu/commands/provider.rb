@@ -22,10 +22,7 @@ require_relative '../commands'
 # ```
 #
 # ```ruby
-# Provider.new.call(:usermod)
-# # [Bohu::Commands::Usermod]
 # Provider.new.call(:change_shell, login: 'root', login_shell: '/bin/bash')
-# # true
 # ```
 class Bohu::Commands::Provider
   include Bohu::Configurable
@@ -34,20 +31,21 @@ class Bohu::Commands::Provider
 
   # @param [String|Symbol] sym
   def call(sym, *args, &block)
-    stt(sym).compact.each do |v|
-      return v.call(*args, &block)
-    end
+    callable_for(sym).call(*args, &block)
   end
 
-  # Denote method or class (underscore notation) is provided.
+  # Denote method is callable.
   #
   # @param [Symbol|String] sym
   # @return [Boolean]
-  def provide?(sym)
-    stt(sym).map { |v| !!v }
-            .tap { |stt| return true if stt.include?(true) }
+  def callable?(sym)
+    callable_for(sym).nil? == false
+  end
 
-    false
+  protected
+
+  def config_root
+    nil
   end
 
   # Find class for given method.
@@ -64,29 +62,14 @@ class Bohu::Commands::Provider
     nil
   end
 
-  # Denote method is provided.
-  #
-  # @param [Symbol|String] method
-  # @return [Boolean]
-  def method?(method)
-    !!class_for(method)
-  end
-
-  protected
-
-  def config_root
-    nil
-  end
-
-  # Get callables.
+  # Get callable for given symbol (method).
   #
   # @param [Symbol|String] sym
-  # @return [Array<Method|nil>]
-  def stt(sym)
-    [
-      loader.loadable?(sym) ? loader.load!(sym).method(:new) : nil,
-      method?(sym) ? class_for(sym).new.method(sym) : nil
-    ].freeze
+  # @return [Method|nil]
+  def callable_for(sym)
+    class_for(sym).tap do |klass|
+      return klass ? klass.new.method(sym) : nil
+    end
   end
 
   # @return [Bohu::Commands::Loader]
