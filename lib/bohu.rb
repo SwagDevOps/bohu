@@ -24,9 +24,7 @@ module Bohu
     Shell: :shell,
     Utils: :utils,
     Which: :which,
-  }.each do |k, v|
-    autoload k, "#{__dir__}/bohu/#{v}"
-  end
+  }.each { |k, v| autoload k, "#{__dir__}/bohu/#{v}" }
 
   # Get config.
   #
