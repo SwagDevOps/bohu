@@ -14,4 +14,8 @@ module Bohu::Commands
   autoload :Loader, "#{__dir__}/commands/loader"
   autoload :Provider, "#{__dir__}/commands/provider"
   autoload :Shell, "#{__dir__}/commands/shell"
+
+  # Module for user loaded classes.
+  module Loaded
+  end
 end
