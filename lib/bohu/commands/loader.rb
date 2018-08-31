@@ -45,14 +45,14 @@ class Bohu::Commands::Loader
   # @return [Class]
   def load!(name)
     self.class.__send__(:camelize, name.to_s).tap do |class_name|
-      Bohu::Commands.tap do |root|
-        unless root.const_defined?(class_name)
+      Bohu::Commands::Loaded.tap do |ns|
+        unless ns.const_defined?(class_name)
           if loadable?(name)
-            root.const_set(class_name, Class.new(Bohu::Commands::BaseCommand))
+            ns.const_set(class_name, Class.new(Bohu::Commands::BaseCommand))
           end
         end
 
-        return root.const_get(class_name)
+        return ns.const_get(class_name)
       end
     end
   end
