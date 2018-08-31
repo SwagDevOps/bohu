@@ -13,4 +13,5 @@ module Bohu::Commands
   autoload :BaseCommand, "#{__dir__}/commands/base_command"
   autoload :Loader, "#{__dir__}/commands/loader"
   autoload :Provider, "#{__dir__}/commands/provider"
+  autoload :Shell, "#{__dir__}/commands/shell"
 end
