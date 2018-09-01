@@ -5,7 +5,14 @@ describe Bohu, :bohu do
 
   it { expect(described_class).to be_const_defined(:VERSION) }
   it { expect(described_class).to be_const_defined(:Config) }
+  it { expect(described_class).to be_const_defined(:Configurable) }
+  it { expect(described_class).to be_const_defined(:Command) }
+  it { expect(described_class).to be_const_defined(:Commands) }
   it { expect(described_class).to be_const_defined(:DotHash) }
+  it { expect(described_class).to be_const_defined(:Etc) }
+  it { expect(described_class).to be_const_defined(:Shell) }
+  it { expect(described_class).to be_const_defined(:Utils) }
+  it { expect(described_class).to be_const_defined(:Which) }
 end
 
 describe Bohu, :bohu do
