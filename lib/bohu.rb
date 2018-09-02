@@ -59,19 +59,27 @@ module Bohu
     instance_for(method).nil? ? super : true
   end
 
+  protected
+
   # Get instance for given method.
   #
   # @return [Object|nil]
   def instance_for(method)
-    [
-      -> { Etc.new(config) },
-      -> { Utils.new(config) },
-    ].each do |callable|
-      callable
-        .call
-        .tap { |instance| return instance if instance.respond_to?(method) }
+    callables.each do |func|
+      func.call.tap do |instance|
+        return instance if instance.respond_to?(method)
+      end
     end
 
     nil
+  end
+
+  # Get callables.
+  #
+  # @return [Array<Proc>]
+  def callables
+    [Commands::Shell, Etc, Utils].map do |klass|
+      -> { klass.new(config) }
+    end
   end
 end
