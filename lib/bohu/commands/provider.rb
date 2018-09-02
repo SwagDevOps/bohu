@@ -53,7 +53,7 @@ class Bohu::Commands::Provider
   # @param [Symbol|String] method
   # @return [Class|nil]
   def class_for(method)
-    config[:commands].each do |k, v|
+    (config[:commands] || {}).each do |k, v|
       next unless v[:actions].to_h.key?(method.to_sym)
 
       return loader.load!(k)
