@@ -69,3 +69,21 @@ describe Bohu, :bohu do
     it { expect(callables.map { |c| c.call.class }).to eq(mapped) }
   end
 end
+
+# protected methods - instance_for
+describe Bohu, :bohu do
+  let(:described_class) { Class.new { include Bohu } }
+  let(:subject) do
+    described_class.new.tap do |instance|
+      instance.config_load(load_defaults: false)
+    end
+  end
+
+  context '#instance_for' do
+    sham!(:utils).im.each do |method|
+      it method.inspect do
+        expect(subject.__send__(:instance_for, method)).to be_a(Bohu::Utils)
+      end
+    end
+  end
+end
