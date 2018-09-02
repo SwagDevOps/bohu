@@ -24,9 +24,10 @@ end
 
 describe Bohu, :bohu do
   let(:described_class) { Class.new { include Bohu } }
+  # Using no config (no defaults, and no filepath given)
   let(:subject) do
     described_class.new.tap do |instance|
-      instance.config_load(load_defaults: true)
+      instance.config_load(load_defaults: false)
     end
   end
 
