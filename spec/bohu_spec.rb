@@ -38,3 +38,34 @@ describe Bohu, :bohu do
     it { expect(subject).to respond_to(method) }
   end
 end
+
+# protected methods - callables
+describe Bohu, :bohu do
+  let(:described_class) { Class.new { include Bohu } }
+  let(:callables) { subject.__send__(:callables) }
+  let(:subject) do
+    described_class.new.tap do |instance|
+      instance.config_load(load_defaults: false)
+    end
+  end
+
+  context '#callables' do
+    it { expect(callables).to be_a(Array) }
+  end
+
+  context '#callables.size' do
+    it { expect(callables.size).to be(3) }
+  end
+
+  context '#callables.map' do
+    let(:mapped) { [Proc] * callables.size }
+
+    it { expect(callables.map(&:class)).to eq(mapped) }
+  end
+
+  context '#callables.map' do
+    let(:mapped) { [Bohu::Commands::Shell, Bohu::Etc, Bohu::Utils] }
+
+    it { expect(callables.map { |c| c.call.class }).to eq(mapped) }
+  end
+end
