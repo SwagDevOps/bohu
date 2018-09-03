@@ -111,7 +111,9 @@ class Bohu::Command < Array
   # @return [Dialect]
   def dialect
     config.public_send(name).tap do |config|
-      return @dialect ||= Dialect.load(name, config[:dialect] || :default)
+      [name, config.fetch(:dialect, :default), config_base].tap do |params|
+        return @dialect ||= Dialect.load(*params)
+      end
     end
   end
 
