@@ -80,11 +80,12 @@ class Bohu::Command::Dialect < Hash
     def paths(config = nil)
       config ||= Bohu.config
 
-      [Pathname.new("#{__dir__}/../dialects").realpath].tap do |paths|
-        (config.fetch(:dialects, {})[:paths] || []).reverse_each do |path|
-          paths.push(Pathname.new(path))
-        end
-      end.reverse
+      [].tap do |paths|
+        (config.fetch(:dialects, {})[:paths] || [])
+          .map { |path| Pathname.new(path) }
+          .map { |fp| fp.absolute? ? fp : Pathname.new(Dir.pwd).join(fp) }
+          .each { |path| paths.push(path) }
+      end.push(default_path)
     end
 
     # Load a file by given filepath.
@@ -96,6 +97,13 @@ class Bohu::Command::Dialect < Hash
       Pathname.new(filepath.to_s).realpath.read.tap do |content|
         return self.new(YAML.safe_load(content))
       end
+    end
+
+    # Get default path.
+    #
+    # @return [Pathname]
+    def default_path
+      Pathname.new("#{__dir__}/../dialects").realpath
     end
 
     protected
