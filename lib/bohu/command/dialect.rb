@@ -14,6 +14,7 @@ class Bohu::Command::Dialect < Hash
   autoload :YAML, 'yaml'
 
   # @param [Hash] dict
+  # @param [Bohu::Config|Hash|nil] config
   def initialize(dict)
     self.class.__send__(:symbolize_keys, dict || {}).each do |k, v|
       self[k] = v
@@ -28,8 +29,7 @@ class Bohu::Command::Dialect < Hash
     [].tap do |output|
       self.class.__send__(:symbolize_keys, input).each do |k, v|
         if self.key?(k)
-          process_option(k, v, input)
-            .tap { |words| output.push(*words) }
+          process_option(k, v, input).tap { |words| output.push(*words) }
         else
           output.push(v % input)
         end
@@ -59,9 +59,10 @@ class Bohu::Command::Dialect < Hash
     #
     # @param [String|Symbol] command name
     # @param [String|Symbol] type name, example: ``default``
+    # @param [Bohu::Config] config
     # @return [self]
-    def load(command, type)
-      paths.each do |path|
+    def load(command, type, config = nil)
+      paths(config).each do |path|
         begin
           path.join(*[type, command].map(&:to_s)).tap do |fname|
             return file("#{fname}.yml")
@@ -76,9 +77,11 @@ class Bohu::Command::Dialect < Hash
     #
     # @param [Bohu::Config] config
     # @return [Array<Pathname>]
-    def paths(config = Bohu.config)
+    def paths(config = nil)
+      config ||= Bohu.config
+
       [Pathname.new("#{__dir__}/../dialects").realpath].tap do |paths|
-        (config[:dialect_paths] || []).reverse_each do |path|
+        (config.fetch(:dialects, {})[:paths] || []).reverse_each do |path|
           paths.push(Pathname.new(path))
         end
       end.reverse
