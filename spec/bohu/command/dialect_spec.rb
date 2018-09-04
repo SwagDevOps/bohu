@@ -43,3 +43,28 @@ describe Bohu::Command::Dialect, :'command/dialect' do
   it { expect(subject).to be_a(Hash) }
   it { expect(subject).to respond_to(:transform).with(1).arguments }
 end
+
+# instance - using ``default/lorem``
+describe Bohu::Command::Dialect, :'command/dialect', :wip do
+  let(:samples) { sham!('command/dialect').samples }
+  let(:subject) { described_class.file(samples.fetch('default/lorem')) }
+  let(:parsed) { { count: ['-n', '%<count>s'] } }
+
+  it { expect(subject).to be_a(Hash) }
+  it { expect(subject).to be_a(described_class) }
+  it { expect(subject).to eq(parsed) }
+
+  context '#transform' do
+    let(:input) { { count: 4 } }
+    let(:transformed) { ['-n', '4'] }
+
+    it { expect(subject.transform(input)).to eq(transformed) }
+  end
+
+  context '#transform' do
+    let(:input) { { count: 4, foo: 'bar', answer: 42 } }
+    let(:transformed) { ['-n', '4', 'bar', '42'] }
+
+    it { expect(subject.transform(input)).to eq(transformed) }
+  end
+end
