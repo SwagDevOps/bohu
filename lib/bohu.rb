@@ -20,20 +20,32 @@ module Bohu
     Command: :command,
     Commands: :commands,
     DotHash: :dot_hash,
+    Env: :env,
     Etc: :etc,
     Shell: :shell,
     Utils: :utils,
     Which: :which,
   }.each { |k, v| autoload k, "#{__dir__}/bohu/#{v}" }
 
+  # Get a read-only env representation.
+  #
+  # @return [Hash|Bohu::Env]
+  def env
+    Env.new.freeze
+  end
+
   # Get config.
   #
   # @return [Config]
   def config
-    {
-      filepath: ENV['BOHU_CONFIG'],
-      load_defaults: !!ENV['BOHU_CONFIG_LOAD_DEFAULTS'],
-    }.tap { |kwargs| config_load(kwargs) if @config.nil? }
+    unless @config
+      self.env.tap do |env|
+        {
+          filepath: env['BOHU_CONFIG'],
+          load_defaults: !!env['BOHU_CONFIG_LOAD_DEFAULTS']
+        }.tap { |kwargs| config_load(kwargs) }
+      end
+    end
 
     @config
   end
