@@ -31,7 +31,7 @@ class Bohu::Command::Dialect < Hash
         if self.key?(k)
           process_option(k, v, input).tap { |words| output.push(*words) }
         else
-          output.push(v % input)
+          output.push(v.to_s % input)
         end
       end
     end
