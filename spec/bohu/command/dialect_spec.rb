@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'bohu/command'
+require 'securerandom'
 
 # class methods
 describe Bohu::Command::Dialect, :'command/dialect' do
@@ -72,6 +73,17 @@ describe Bohu::Command::Dialect, :'command/dialect' do
 
     it { expect(loaded).to be_a(Hash) }
     it { expect(loaded).to eq(parsed) }
+  end
+
+  context '.load' do # inexisting file
+    let(:config) do
+      { dialects: { paths: [([SecureRandom.hex[0..8]] * 3).join('/')] } }
+    end
+
+    it do
+      expect { described_class.load('lorem', 'default', config) }
+        .to raise_error(Bohu::Command::Dialect::MissingError)
+    end
   end
 end
 
