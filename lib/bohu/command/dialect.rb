@@ -15,7 +15,6 @@ class Bohu::Command::Dialect < Hash
   autoload :MissingError, "#{__dir__}/dialect/missing_error"
 
   # @param [Hash] dict
-  # @param [Bohu::Config|Hash|nil] config
   def initialize(dict)
     self.class.__send__(:symbolize_keys, dict || {}).each do |k, v|
       self[k] = v
@@ -62,6 +61,8 @@ class Bohu::Command::Dialect < Hash
     # @param [String|Symbol] type name, example: ``default``
     # @param [Bohu::Config] config
     # @return [self]
+    #
+    # @raise [MissingError] when dialect is not found in paths
     def load(command, type, config = nil)
       paths = self.paths(config)
 
