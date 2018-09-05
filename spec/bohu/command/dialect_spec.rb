@@ -5,6 +5,8 @@ require 'securerandom'
 
 # class methods
 describe Bohu::Command::Dialect, :'command/dialect' do
+  it { expect(described_class).to be_const_defined(:MissingError) }
+
   it { expect(described_class).to respond_to(:new).with(1).arguments }
 
   it { expect(described_class).to respond_to(:load).with(2).arguments }
