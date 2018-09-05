@@ -36,6 +36,32 @@ describe Bohu::Command::Dialect, :'command/dialect' do
   end
 end
 
+# class methods - paths (using a config)
+describe Bohu::Command::Dialect, :'command/dialect' do
+  let(:config) { { dialects: { paths: ['spec/samples/dialects'] } } }
+  let(:paths) { described_class.paths(config) }
+
+  context '.paths' do
+    it { expect(paths).to be_a(Array) }
+  end
+
+  context '.paths.size' do
+    it { expect(paths.size).to eq(2) }
+  end
+
+  context '.paths.map' do
+    it { expect(paths.map(&:class)).to eq([Pathname, Pathname]) }
+  end
+
+  context '.paths.last' do
+    it { expect(paths.last).to eq(described_class.default_path) }
+  end
+
+  context '.paths.last.directory?' do
+    it { expect(paths.last.directory?).to be(true) }
+  end
+end
+
 # instance
 describe Bohu::Command::Dialect, :'command/dialect' do
   let(:subject) { described_class.new({}) }
@@ -45,7 +71,7 @@ describe Bohu::Command::Dialect, :'command/dialect' do
 end
 
 # instance - using ``default/lorem``
-describe Bohu::Command::Dialect, :'command/dialect', :wip do
+describe Bohu::Command::Dialect, :'command/dialect' do
   let(:samples) { sham!('command/dialect').samples }
   let(:subject) { described_class.file(samples.fetch('default/lorem')) }
   let(:parsed) { { count: ['-n', '%<count>s'] } }
