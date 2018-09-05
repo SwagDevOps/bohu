@@ -62,6 +62,19 @@ describe Bohu::Command::Dialect, :'command/dialect' do
   end
 end
 
+# class methods - load (using a config)
+describe Bohu::Command::Dialect, :'command/dialect' do
+  let(:config) { { dialects: { paths: ['spec/samples/dialects'] } } }
+  let(:parsed) { { count: ['-n', '%<count>s'] } }
+
+  context '.load' do
+    let(:loaded) { described_class.load('lorem', 'default', config) }
+
+    it { expect(loaded).to be_a(Hash) }
+    it { expect(loaded).to eq(parsed) }
+  end
+end
+
 # instance
 describe Bohu::Command::Dialect, :'command/dialect' do
   let(:subject) { described_class.new({}) }
