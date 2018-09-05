@@ -12,6 +12,7 @@ require_relative '../command'
 class Bohu::Command::Dialect < Hash
   autoload :Pathname, 'pathname'
   autoload :YAML, 'yaml'
+  autoload :MissingError, "#{__dir__}/dialect/missing_error"
 
   # @param [Hash] dict
   # @param [Bohu::Config|Hash|nil] config
@@ -66,11 +67,12 @@ class Bohu::Command::Dialect < Hash
 
       paths.each do |path|
         begin
-          path.join(*[type, command].map(&:to_s)).tap do |fname|
-            return file("#{fname}.yml")
-          end
-        rescue Errno::ENOENT => e
-          raise e if path == paths.last
+          path.join(*[type, command].map(&:to_s))
+              .tap { |fname| return file("#{fname}.yml") }
+        rescue Errno::ENOENT
+          next unless path == paths.last
+
+          raise MissingError.new(command, type)
         end
       end
     end
