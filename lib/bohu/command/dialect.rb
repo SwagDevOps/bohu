@@ -62,7 +62,9 @@ class Bohu::Command::Dialect < Hash
     # @param [Bohu::Config] config
     # @return [self]
     def load(command, type, config = nil)
-      paths(config).each do |path|
+      paths = self.paths(config)
+
+      paths.each do |path|
         begin
           path.join(*[type, command].map(&:to_s)).tap do |fname|
             return file("#{fname}.yml")
