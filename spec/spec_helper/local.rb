@@ -11,6 +11,8 @@ module Local
   # @param [Symbol] name
   def sham!(name)
     FactoryStruct.sham!(name)
+  rescue NoMethodError
+    raise NameError, "no such sham - #{name}"
   end
 
   # Silences any stream for the duration of the block.

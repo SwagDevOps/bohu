@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Sham.config(FactoryStruct, :utils) do |c|
+Sham.config(FactoryStruct, :filesystem) do |c|
   c.attributes do
     {
       # interesting methods (from FileUtils)

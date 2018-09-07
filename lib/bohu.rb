@@ -22,8 +22,8 @@ module Bohu
     DotHash: :dot_hash,
     Env: :env,
     Etc: :etc,
+    Filesystem: :filesystem,
     Shell: :shell,
-    Utils: :utils,
     Which: :which,
   }.each { |k, v| autoload k, "#{__dir__}/bohu/#{v}" }
 
@@ -90,7 +90,7 @@ module Bohu
   #
   # @return [Array<Proc>]
   def callables
-    [Commands::Shell, Etc, Utils].map do |klass|
+    [Shell, Commands::Shell, Etc, Filesystem].map do |klass|
       -> { klass.new(config) }
     end
   end

@@ -11,7 +11,7 @@ describe Bohu, :bohu do
   it { expect(described_class).to be_const_defined(:DotHash) }
   it { expect(described_class).to be_const_defined(:Etc) }
   it { expect(described_class).to be_const_defined(:Shell) }
-  it { expect(described_class).to be_const_defined(:Utils) }
+  it { expect(described_class).to be_const_defined(:Filesystem) }
   it { expect(described_class).to be_const_defined(:Which) }
 end
 
@@ -34,7 +34,7 @@ describe Bohu, :bohu do
   it { expect(subject).to respond_to(:sh).with_unlimited_arguments }
 
   # FileUtils methods
-  sham!(:utils).im.each do |method|
+  sham!(:filesystem).im.each do |method|
     it { expect(subject).to respond_to(method) }
   end
 end
@@ -43,6 +43,9 @@ end
 describe Bohu, :bohu do
   let(:described_class) { Class.new { include Bohu } }
   let(:callables) { subject.__send__(:callables) }
+  let(:mapped) do
+    [Bohu::Shell, Bohu::Commands::Shell, Bohu::Etc, Bohu::Filesystem]
+  end
   let(:subject) do
     described_class.new.tap do |instance|
       instance.config_load(load_defaults: false)
@@ -54,7 +57,7 @@ describe Bohu, :bohu do
   end
 
   context '#callables.size' do
-    it { expect(callables.size).to be(3) }
+    it { expect(callables.size).to be(mapped.size) }
   end
 
   context '#callables.map' do
@@ -64,8 +67,6 @@ describe Bohu, :bohu do
   end
 
   context '#callables.map' do
-    let(:mapped) { [Bohu::Commands::Shell, Bohu::Etc, Bohu::Utils] }
-
     it { expect(callables.map { |c| c.call.class }).to eq(mapped) }
   end
 end
@@ -80,9 +81,11 @@ describe Bohu, :bohu do
   end
 
   context '#instance_for' do
-    sham!(:utils).im.each do |method|
+    sham!(:filesystem).im.each do |method|
       it method.inspect do
-        expect(subject.__send__(:instance_for, method)).to be_a(Bohu::Utils)
+        subject.__send__(:instance_for, method).tap do |instance|
+          expect(instance).to be_a(Bohu::Filesystem)
+        end
       end
     end
   end
