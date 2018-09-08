@@ -41,14 +41,14 @@ module Bohu::Configurable
   #
   # @return [String|nil]
   def config_root
-    return @config_root if @config_root
+    return @config_root if defined?(@config_root)
     return nil unless self.class.name
 
     self.class.name.split('::')[1..-1].map(&:to_s).map do |word|
       word.gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
           .gsub(/([a-z\d])([A-Z])/, '\1_\2')
           .tr('-', '_').downcase
-    end.join('.')
+    end.join('.').tap { |word| @config_root = word }
   end
 
   # @param [Bohu::ConfigBase] config
