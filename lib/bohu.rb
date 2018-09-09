@@ -17,6 +17,7 @@ module Bohu
     VERSION: :version,
     Config: :config,
     Configurable: :configurable,
+    Delegator: :delegator,
     Command: :command,
     Commands: :commands,
     DotHash: :dot_hash,
@@ -90,7 +91,10 @@ module Bohu
   #
   # @return [Array<Proc>]
   def callables
-    [Shell, Commands::Shell, Etc, Filesystem].map do |klass|
+    [Shell::Provider,
+     Commands::Shell,
+     Etc,
+     Filesystem::Provider].map do |klass|
       -> { klass.new(config) }
     end
   end

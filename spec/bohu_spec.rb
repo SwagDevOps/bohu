@@ -44,7 +44,8 @@ describe Bohu, :bohu do
   let(:described_class) { Class.new { include Bohu } }
   let(:callables) { subject.__send__(:callables) }
   let(:mapped) do
-    [Bohu::Shell, Bohu::Commands::Shell, Bohu::Etc, Bohu::Filesystem]
+    [Bohu::Shell::Provider, Bohu::Commands::Shell,
+     Bohu::Etc, Bohu::Filesystem::Provider]
   end
   let(:subject) do
     described_class.new.tap do |instance|
@@ -84,7 +85,7 @@ describe Bohu, :bohu do
     sham!(:filesystem).im.each do |method|
       it method.inspect do
         subject.__send__(:instance_for, method).tap do |instance|
-          expect(instance).to be_a(Bohu::Filesystem)
+          expect(instance).to be_a(Bohu::Filesystem::Provider)
         end
       end
     end
