@@ -17,6 +17,7 @@ class Bohu::Shell
 
   include Bohu::Configurable
 
+  autoload :Provider, "#{__dir__}/shell/provider"
   autoload :Capture, "#{__dir__}/shell/capture"
   autoload :Result, "#{__dir__}/shell/result"
   autoload :ExitStatusError, "#{__dir__}/shell/exceptions"
