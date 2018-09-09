@@ -29,11 +29,11 @@ class Bohu::Delegator
     attr_accessor :delegator_class
 
     # @param [Class] klass
-    # @param [Array<Symbol>] methods
-    def register(klass, methods = [])
+    # @param [Array<Symbol|String>] methods
+    def forward(klass, *methods)
       self.delegator_class = klass
 
-      def_delegators(*([:@delegator] + methods))
+      def_delegators(*([:@delegator] + methods.map(&:to_sym)))
     end
   end
 
