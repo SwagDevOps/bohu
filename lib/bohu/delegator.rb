@@ -11,6 +11,7 @@ require_relative '../bohu'
 # Delegator
 #
 # @abstract
+# @see https://ruby-doc.org/stdlib-2.3.0/libdoc/forwardable/rdoc/Forwardable.html
 class Bohu::Delegator
   extend Forwardable
   include Bohu::Configurable
