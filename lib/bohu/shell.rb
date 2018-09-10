@@ -23,7 +23,7 @@ class Bohu::Shell
   autoload :ExitStatusError, "#{__dir__}/shell/exceptions"
 
   # @raise [ExitStatusError]
-  # @return [Boolean]
+  # @return [Result]
   def sh(*args)
     self.class.__send__(:mutex).synchronize do
       parse_args(*args).tap do |command|
@@ -38,12 +38,12 @@ class Bohu::Shell
     end
   end
 
-  # @return [Capture::Capture]
+  # @return [Result]
   def capture(*args)
     capturable(*args).capture
   end
 
-  # @return [Capture::Capture]
+  # @return [Result]
   def capture!(*args)
     capturable(*args).capture!
   end
@@ -54,6 +54,7 @@ class Bohu::Shell
   def verbose?
     return @verbose unless @verbose.nil?
     return true unless config.key?(:verbose)
+
     !!config[:verbose]
   end
 
