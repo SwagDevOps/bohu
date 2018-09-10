@@ -6,8 +6,7 @@
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-module Bohu # rubocop:disable Style/Documentation
-end
+require_relative '../bohu'
 
 # Describe version using a YAML file.
 #
@@ -150,6 +149,6 @@ class Bohu::Version
   end
 end
 
-module Bohu
-  VERSION = Bohu::Version.new.freeze
+unless Bohu.const_defined?(:VERSION)
+  Bohu::VERSION = Bohu::Version.new.freeze
 end
