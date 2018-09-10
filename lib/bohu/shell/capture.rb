@@ -13,23 +13,22 @@ require 'English'
 class Bohu::Shell::Capture < Array
   autoload :Open3, 'open3'
 
+  # @api
   Result = Bohu::Shell::Result
   ExitStatusError = Bohu::Shell::ExitStatusError
 
-  # @return [Result]
+  # @return [Bohu::Shell::Result]
   def capture
     Open3.capture3(*self).tap do |res|
       return Result.new(res.fetch(2), res.fetch(0), res.fetch(1))
     end
   end
 
-  # @raise [ExitStatusError]
-  # @return [Capture]
+  # @raise [Bohu::Shell::ExitStatusError]
+  # @return [Bohu::Shell::Result]
   def capture!
     return capture.tap do |result|
-      unless result.success?
-        raise ExitStatusError.new(self, result)
-      end
+      raise ExitStatusError.new(self, result) unless result.success?
     end
   end
 end
