@@ -14,6 +14,6 @@ require_relative '../filesystem'
 # @see http://ruby-doc.org/stdlib-2.3.0/libdoc/fileutils/rdoc/FileUtils.html
 class Bohu::Filesystem::Provider < Bohu::Delegator
   Bohu::Filesystem.tap do |klass|
-    forward(*([klass] + klass.fileutils_methods))
+    forward(*klass.fileutils_methods, to: klass)
   end
 end

@@ -28,12 +28,24 @@ class Bohu::Delegator
     # @return [[Class|nil]
     attr_accessor :delegator_class
 
-    # @param [Class] klass
+    # Sample of use:
+    #
+    # ```ruby
+    # class Foo
+    #   forward(:answer, :do_something, to: Bar)
+    # end
+    # ```
+    #
     # @param [Array<Symbol|String>] methods
-    def forward(klass, *methods)
-      self.delegator_class = klass
+    # @return [self]
+    def forward(*methods, **kwargs)
+      kwargs.fetch(:to).tap do |klass|
+        self.delegator_class = klass
 
-      def_delegators(*([:@delegator] + methods.map(&:to_sym)))
+        def_delegators(*([:@delegator] + methods.map(&:to_sym)))
+      end
+
+      self
     end
   end
 

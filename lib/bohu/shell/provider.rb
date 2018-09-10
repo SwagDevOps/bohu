@@ -12,5 +12,11 @@ require_relative '../shell'
 #
 # Almost a wrapper restricting access to some methods.
 class Bohu::Shell::Provider < Bohu::Delegator
-  forward(Bohu::Shell, :sh, :capture, :capture!)
+  # @!method sh
+  #   @return [Bohu::Shell::Result] See {Bohu::Shell#sh}.
+  # @!method capture
+  #   @return [Bohu::Shell::Result] See {Bohu::Shell#capture}.
+  # @!method capture!
+  #   @return [Bohu::Shell::Result] See {Bohu::Shell#capture!}.
+  forward(:sh, :capture, :capture!, to: Bohu::Shell)
 end
