@@ -10,6 +10,11 @@ $LOAD_PATH.unshift(__dir__)
 require "#{__dir__}/bohu/locked"
 
 # Bohu module
+#
+# @see Bohu::Shell
+# @see Bohu::Commands::Shell
+# @see Bohu::Etc
+# @see Bohu::Filesystem
 module Bohu
   singleton_class.include(self)
 
@@ -41,10 +46,9 @@ module Bohu
   def config
     unless @config
       self.env.tap do |env|
-        {
-          filepath: env['BOHU_CONFIG'],
-          load_defaults: !!env['BOHU_CONFIG_LOAD_DEFAULTS']
-        }.tap { |kwargs| config_load(kwargs) }
+        [env['BOHU_CONFIG'], !!env['BOHU_CONFIG_LOAD_DEFAULTS']].tap do |args|
+          configure(*args)
+        end
       end
     end
 
@@ -53,11 +57,15 @@ module Bohu
 
   # Load config for given filepath.
   #
-  # @return [Config]
-  def config_load(filepath: nil, load_defaults: true)
+  # @param [String|Hash] config
+  # @param [Boolean] load_defaults
+  # @return [self]
+  def configure(config = nil, load_defaults = true)
     (@config_mutex ||= Mutex.new).synchronize do
-      @config = Config.new(filepath, load_defaults: load_defaults)
+      @config = Config.new(config, load_defaults: load_defaults)
     end
+
+    self
   end
 
   # @see #instance_for

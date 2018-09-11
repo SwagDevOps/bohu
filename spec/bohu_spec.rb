@@ -19,7 +19,10 @@ describe Bohu, :bohu do
   let(:described_class) { Class.new { include Bohu } }
 
   it { expect(subject).to respond_to(:config).with(0).arguments }
-  it { expect(subject).to respond_to(:config_load).with(0).arguments }
+
+  it { expect(subject).to respond_to(:configure).with(0).arguments }
+  it { expect(subject).to respond_to(:configure).with(1).arguments }
+  it { expect(subject).to respond_to(:configure).with(2).arguments }
 end
 
 describe Bohu, :bohu do
@@ -27,7 +30,7 @@ describe Bohu, :bohu do
   # Using no config (no defaults, and no filepath given)
   let(:subject) do
     described_class.new.tap do |instance|
-      instance.config_load(load_defaults: false)
+      instance.configure(nil, false)
     end
   end
 
@@ -49,7 +52,7 @@ describe Bohu, :bohu do
   end
   let(:subject) do
     described_class.new.tap do |instance|
-      instance.config_load(load_defaults: false)
+      instance.configure(nil, false)
     end
   end
 
@@ -77,7 +80,7 @@ describe Bohu, :bohu do
   let(:described_class) { Class.new { include Bohu } }
   let(:subject) do
     described_class.new.tap do |instance|
-      instance.config_load(load_defaults: false)
+      instance.configure(nil, false)
     end
   end
 
