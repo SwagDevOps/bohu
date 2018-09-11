@@ -46,7 +46,7 @@ module Bohu
   def config
     unless @config
       self.env.tap do |env|
-        [env['BOHU_CONFIG'], !!env['BOHU_CONFIG_LOAD_DEFAULTS']].tap do |args|
+        [env['BOHU_CONFIG'], !!env['BOHU_DEFAULTS']].tap do |args|
           configure(*args)
         end
       end
@@ -60,6 +60,8 @@ module Bohu
   # @param [String|Hash] config
   # @param [Boolean] load_defaults
   # @return [self]
+  #
+  # @see Bohu::Config
   def configure(config = nil, load_defaults = true)
     (@config_mutex ||= Mutex.new).synchronize do
       @config = Config.new(config, load_defaults: load_defaults)
