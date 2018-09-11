@@ -12,7 +12,7 @@ require_relative '../bohu'
 module Bohu::Commands
   autoload :BaseCommand, "#{__dir__}/commands/base_command"
   autoload :Loader, "#{__dir__}/commands/loader"
-  autoload :Provider, "#{__dir__}/commands/provider"
+  autoload :Callable, "#{__dir__}/commands/callable"
   autoload :Shell, "#{__dir__}/commands/shell"
 
   # Module for user loaded classes.

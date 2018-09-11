@@ -22,12 +22,18 @@ require_relative '../commands'
 # ```
 #
 # ```ruby
-# Provider.new.call(:change_shell, login: 'root', login_shell: '/bin/bash')
+# Callable.new.call(:change_shell, login: 'root', login_shell: '/bin/bash')
 # ```
-class Bohu::Commands::Provider
+class Bohu::Commands::Callable
   include Bohu::Configurable
 
   Loader = Bohu::Commands::Loader
+
+  def initialize(*)
+    @config_root = nil
+
+    super
+  end
 
   # @param [String|Symbol] sym
   def call(sym, *args, &block)
@@ -43,10 +49,6 @@ class Bohu::Commands::Provider
   end
 
   protected
-
-  def config_root
-    nil
-  end
 
   # Find class for given method.
   #
