@@ -10,9 +10,10 @@
 class Lorem
   autoload :OptionParser, 'optionparser'
 
+  # rubocop:disable Lint/PercentStringArray
   WORDS = [
     # The standard Lorem Ipsum passage, used since the 1500s
-    %w[Lorem ipsum dolor sit amet,consectetur adipiscing elit sed do],
+    %w[Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do],
     %w[eiusmod tempor incididunt ut labore et dolore magna aliqua.],
     %w[Ut enim ad minim veniam quis nostrud exercitation ullamco laboris],
     %w[nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in],
@@ -36,6 +37,7 @@ class Lorem
     %w[consequatur vel illum qui dolorem eum fugiat quo voluptas nulla],
     %w[pariatur?],
   ].flatten
+  # rubocop:enable Lint/PercentStringArray
 
   def initialize(argv = ARGV)
     self.parse(argv)
