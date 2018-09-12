@@ -36,3 +36,18 @@ describe Bohu::Shell::Capture, :'shell/capture' do
     end
   end
 end
+
+# instance methods - capture (failure)
+describe Bohu::Shell::Capture, :'shell/capture' do
+  let(:subject) { described_class.new(['false']) }
+
+  context '#capture!' do
+    it do
+      expect { subject.capture! }
+        .to raise_error(Bohu::Shell::ExitStatusError)
+
+      expect { subject.capture! }
+        .to raise_error('"false" exited with status: 1')
+    end
+  end
+end
