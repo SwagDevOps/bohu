@@ -20,7 +20,9 @@ class Bohu::Shell::Capture < Array
   # @return [Bohu::Shell::Result]
   def capture
     Open3.capture3(*self).tap do |res|
-      return Result.new(res.fetch(2), res.fetch(0), res.fetch(1))
+      { stdout: res.fetch(0), stderr: res.fetch(1) }.tap do |kwargs|
+        return Result.new(res.fetch(2), **kwargs)
+      end
     end
   end
 
