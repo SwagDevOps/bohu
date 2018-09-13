@@ -35,9 +35,9 @@ describe Bohu, :bohu do
   end
 
   # Shell methods
-  it { expect(subject).to respond_to(:sh).with_unlimited_arguments }
-  it { expect(subject).to respond_to(:capture).with_unlimited_arguments }
-  it { expect(subject).to respond_to(:capture!).with_unlimited_arguments }
+  sham!(:shell).im.each do |method|
+    it { expect(subject).to respond_to(method).with_unlimited_arguments }
+  end
 
   # Filesystem methods
   sham!(:filesystem).im.each do |method|
