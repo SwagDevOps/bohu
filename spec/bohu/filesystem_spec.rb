@@ -28,6 +28,10 @@ describe Bohu::Filesystem, :filesystem do
 
     it { expect(subject.verbose?).to be(true) }
   end
+
+  sham!(:filesystem).im.each do |method|
+    it { expect(subject).to respond_to(method) }
+  end
 end
 
 # FileUtils methods
