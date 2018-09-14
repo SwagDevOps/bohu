@@ -16,7 +16,7 @@ describe Bohu::Shell::Provider, :'shell/provider' do
   let(:config) { { shell: { verbose: false } } }
   let(:subject) { described_class.new(config) }
 
-  [:sh, :capture, :capture!].each do |method|
+  sham!(:shell).im.each do |method|
     it { expect(subject).to respond_to(method).with_unlimited_arguments }
   end
 end
