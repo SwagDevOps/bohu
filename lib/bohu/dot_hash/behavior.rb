@@ -60,9 +60,9 @@ module Bohu::DotHash::Behavior
 
     OpenStruct.new(key: method.to_s.gsub(/=$/, ''),
                    eql: method.to_s[-1] == '=').tap do |res|
-      res.key = res.key.to_sym if has_key?(res.key.to_sym)
+      res.key = res.key.to_sym if key?(res.key.to_sym)
 
-      res.seen = has_key?(res.key)
+      res.seen = key?(res.key)
     end
   end
 end
