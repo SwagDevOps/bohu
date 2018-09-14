@@ -11,6 +11,11 @@ describe Bohu::Filesystem, :filesystem do
   let(:config) { {} }
   let(:subject) { described_class.new(config) }
 
+  # FileUtils methods
+  sham!(:filesystem).im.each do |method|
+    it { expect(subject).to respond_to(method) }
+  end
+
   it { expect(subject).to respond_to(:verbose?).with(0).arguments }
 
   context '#verbose?' do
@@ -27,19 +32,5 @@ describe Bohu::Filesystem, :filesystem do
     let(:config) { { filesystem: { verbose: true } } }
 
     it { expect(subject.verbose?).to be(true) }
-  end
-
-  sham!(:filesystem).im.each do |method|
-    it { expect(subject).to respond_to(method) }
-  end
-end
-
-# FileUtils methods
-describe Bohu::Filesystem, :filesystem do
-  let(:config) { { filesystem: { verbose: false } } }
-  let(:subject) { described_class.new(config) }
-
-  sham!(:filesystem).im.each do |method|
-    it { expect(subject).to respond_to(method) }
   end
 end
