@@ -7,6 +7,8 @@
 # There is NO WARRANTY, to the extent permitted by law.
 
 self.singleton_class.__send__(:define_method, :locked?) do
+  return false if ENV['BOHU_ENV'] == 'production'
+
   Dir.chdir("#{__dir__}/../..") do
     [['gems.rb', 'gems.locked'], ['Gemfile', 'Gemfile.lock']]
       .map { |m| 2 == Dir.glob(m).size }
