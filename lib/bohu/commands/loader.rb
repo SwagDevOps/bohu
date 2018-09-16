@@ -30,6 +30,13 @@ require_relative '../commands'
 class Bohu::Commands::Loader
   include Bohu::Configurable
 
+  # Get module for loaded classes.
+  #
+  # @return [Bohu::Commands::Loaded]
+  def container
+    Bohu::Commands::Loaded
+  end
+
   # Load all defined commands.
   #
   # @return [Array<Class>]
@@ -42,17 +49,16 @@ class Bohu::Commands::Loader
   # @raise [NameError]
   #
   # @param [String|Symbol] name
-  # @return [Class]
+  # @return [Bohu::Commands::BaseCommand]
   def load!(name)
     self.class.__send__(:camelize, name.to_s).tap do |class_name|
-      Bohu::Commands::Loaded.tap do |ns|
-        unless ns.const_defined?(class_name)
-          if loadable?(name)
-            ns.const_set(class_name, Class.new(Bohu::Commands::BaseCommand))
-          end
+      "#{container}::#{class_name}".tap do |class_const|
+        if loadable?(name) and !Object.const_defined?(class_const)
+          container
+            .const_set(class_name, Class.new(Bohu::Commands::BaseCommand))
         end
 
-        return ns.const_get(class_name)
+        return Object.const_get(class_const)
       end
     end
   end
