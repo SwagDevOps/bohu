@@ -7,13 +7,14 @@
 # There is NO WARRANTY, to the extent permitted by law.
 
 require_relative '../bohu'
+require 'forwardable'
 
 # Delegator
 #
 # @abstract
 # @see https://ruby-doc.org/stdlib-2.3.0/libdoc/forwardable/rdoc/Forwardable.html
 class Bohu::Delegator
-  extend Forwardable
+  extend ::Forwardable
   include Bohu::Configurable
 
   # @see Bohu::Configurable#initialize
