@@ -17,3 +17,25 @@ commands:
           - '%<login_shell>s'
           - '/bin/bash'
         login: '%<login>s'
+  rubygems:
+    executable: 'gem'
+    actions:
+      gem_install:
+        command: 'install'
+        gem: '%<gem>s'
+        norc: true
+        bindir:
+          - '%<bindir>s'
+          - '/usr/local/bin'
+        user_install: false
+        post_install_message: false
+        suggestions: false
+        document: false
+        clear_sources: true
+        wrappers: false
+        env_shebang: true
+        format_executable: true
+      gem_build:
+        command: 'build'
+        gemspec: '%<gemspec>s'
+        norc: true
