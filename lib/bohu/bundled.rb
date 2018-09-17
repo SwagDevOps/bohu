@@ -6,17 +6,28 @@
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
+# rubocop:disable Style/Documentation
+
 require_relative '../bohu'
 
-Bohu.singleton_class.__send__(:define_method, :bundled?) do
-  return false if ENV['BOHU_BUNDLED'] == 'false'
+module Bohu
+  singleton_class.include(self)
 
-  Dir.chdir("#{__dir__}/../..") do
-    [['gems.rb', 'gems.locked'], ['Gemfile', 'Gemfile.lock']]
-      .map { |m| 2 == Dir.glob(m).size }
-      .include?(true)
+  # Denote ``Bohu`` uses ``Bundler`` (vendoring).
+  #
+  # @return [Boolean]
+  def bundled?
+    return false if ENV['BOHU_BUNDLED'] == 'false'
+
+    Dir.chdir("#{__dir__}/../..") do
+      [['gems.rb', 'gems.locked'], ['Gemfile', 'Gemfile.lock']]
+        .map { |m| 2 == Dir.glob(m).size }
+        .include?(true)
+    end
   end
 end
+
+# rubocop:enable Style/Documentation
 
 if Bohu.bundled?
   %w[rubygems bundler/setup].each { |req| require req }
