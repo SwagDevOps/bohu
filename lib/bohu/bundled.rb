@@ -6,8 +6,10 @@
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-self.singleton_class.__send__(:define_method, :locked?) do
-  return false if ENV['BOHU_ENV'] == 'production'
+require_relative '../bohu'
+
+Bohu.singleton_class.__send__(:define_method, :bundled?) do
+  return false if ENV['BOHU_BUNDLED'] == 'false'
 
   Dir.chdir("#{__dir__}/../..") do
     [['gems.rb', 'gems.locked'], ['Gemfile', 'Gemfile.lock']]
@@ -16,7 +18,7 @@ self.singleton_class.__send__(:define_method, :locked?) do
   end
 end
 
-if locked?
+if Bohu.bundled?
   %w[rubygems bundler/setup].each { |req| require req }
 
   if Gem::Specification.find_all_by_name('kamaze-project').any?

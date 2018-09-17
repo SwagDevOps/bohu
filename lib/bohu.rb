@@ -7,7 +7,6 @@
 # There is NO WARRANTY, to the extent permitted by law.
 
 $LOAD_PATH.unshift(__dir__)
-require "#{__dir__}/bohu/locked"
 
 # Bohu module
 #
@@ -17,6 +16,11 @@ require "#{__dir__}/bohu/locked"
 # @see Bohu::Filesystem
 module Bohu
   singleton_class.include(self)
+
+  # @!method bundled?()
+  #   Denote ``Bohu`` uses ``Bundler`` (vendoring).
+  #   @return [Boolean]
+  require_relative 'bohu/bundled'
 
   {
     VERSION: :version,
