@@ -19,10 +19,19 @@ describe Bohu, :bohu do
   let(:described_class) { Class.new { include Bohu } }
 
   it { expect(subject).to respond_to(:config).with(0).arguments }
+  it { expect(subject).to respond_to(:bundled?).with(0).arguments }
 
   it { expect(subject).to respond_to(:configure).with(0).arguments }
   it { expect(subject).to respond_to(:configure).with(1).arguments }
   it { expect(subject).to respond_to(:configure).with(2).arguments }
+end
+
+describe Bohu, :bohu do
+  let(:described_class) { Class.new { include Bohu } }
+
+  context '.bundled?' do
+    it { expect(subject.bundled?).to be(true) }
+  end
 end
 
 describe Bohu, :bohu do
