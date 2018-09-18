@@ -17,7 +17,7 @@ commands:
           - '%<login_shell>s'
           - '/bin/bash'
         login: '%<login>s'
-  rubygems:
+  gem_install:
     executable: 'gem'
     actions:
       gem_install:
@@ -35,6 +35,9 @@ commands:
         wrappers: false
         env_shebang: true
         format_executable: true
+  gem_build:
+    executable: 'gem'
+    actions:
       gem_build:
         command: 'build'
         gemspec: '%<gemspec>s'

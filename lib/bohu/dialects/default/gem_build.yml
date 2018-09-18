@@ -1,0 +1,4 @@
+---
+bindir: ['--bindir', '%<bindir>s']
+norc: ['--norc', true]
+verbose: ['--verbose', false]
