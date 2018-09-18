@@ -17,6 +17,11 @@ commands:
           - '%<login_shell>s'
           - '/bin/bash'
         login: '%<login>s'
+    addgroup:
+      actions:
+        create_group:
+          name: '%<name>s'
+          system: false
   gem_install:
     executable: 'gem'
     actions:
