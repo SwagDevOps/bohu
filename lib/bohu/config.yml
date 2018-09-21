@@ -1,7 +1,7 @@
 ---
 shell:
   verbose: true
-utils:
+filesystem:
   verbose: true
 commands:
   usermod:
