@@ -6,6 +6,14 @@ describe Bohu::Shell, :shell do
   it { expect(described_class).to respond_to(:new).with(2).arguments }
 end
 
+# const
+describe Bohu::Shell, :shell do
+  it { expect(described_class).to be_const_defined(:Capture) }
+  it { expect(described_class).to be_const_defined(:CommandLineError) }
+  it { expect(described_class).to be_const_defined(:Provider) }
+  it { expect(described_class).to be_const_defined(:Result) }
+end
+
 # instance
 describe Bohu::Shell, :shell do
   let(:subject) { described_class.new(shell: {}) }
