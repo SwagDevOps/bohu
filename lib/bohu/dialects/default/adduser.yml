@@ -1,4 +1,9 @@
 ---
 system: ['-S', true]
+home: ['-h','%<home>s']
+create_home: ['-H', false]
+group: ['-G','%<group>s']
+gecos: ['-g', '%<gecos>s']
+uid: ['-u', '%<uid>s']
 login_shell: ['-s', '%<login_shell>s']
 assign_password: ['-D', false]
