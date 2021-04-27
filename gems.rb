@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
-# bundle install --path vendor/bundle --clean
+# ```sh
+# bundle config set --local clean 'true'
+# bundle config set --local path 'vendor/bundle'
+# bundle install --standalone
+# ```
 
 source 'https://rubygems.org'
 
 group :development do
-  gem 'kamaze-project', '~> 1.0', '>= 1.0.3'
+  { github: 'SwagDevOps/kamaze-project', branch: 'develop' }.tap do |options|
+    gem(*['kamaze-project'].concat([options]))
+  end
+
   gem 'listen', '~> 3.1'
-  gem 'rubocop', '~> 0.58'
+  gem 'rubocop', '~> 1.0'
+  gem 'rugged', '~> 1.0'
+  gem 'stibium-bundled', '~> 0.0.1', '>= 0.0.4'
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
   # repl ---------------------------------
   gem 'interesting_methods', '~> 0.1'
