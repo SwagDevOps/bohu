@@ -18,7 +18,7 @@ class Bohu::Config < Bohu::ConfigBase
 
   # Load config by given filepath (or use defaults).
   #
-  # @param [String] filepath
+  # @param [String, nil] filepath
   def initialize(filepath = nil, load_defaults: false)
     # for internal use, as deep_merge methods use initialize
     filepath.tap { |input| return super(input) if input.is_a?(Hash) }

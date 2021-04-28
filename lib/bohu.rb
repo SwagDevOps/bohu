@@ -33,14 +33,14 @@ module Bohu
     Which: :which,
   }.each { |k, v| autoload k, "#{__dir__}/bohu/#{v}" }
 
-  include(Bundleable) unless ENV['BOHU_BUNDLED'] == 'false'
-
   # Get a read-only env representation.
   #
-  # @return [Hash|Bohu::Env]
+  # @return [Hash, Bohu::Env]
   def env
     Env.new.freeze
   end
+
+  include(Bundleable) unless env['BOHU_BUNDLED'] == false
 
   # Get config.
   #
@@ -48,9 +48,7 @@ module Bohu
   def config
     unless @config
       self.env.tap do |env|
-        [env['BOHU_CONFIG'], !!env['BOHU_DEFAULTS']].tap do |args|
-          configure(*args)
-        end
+        configure(env['BOHU_CONFIG'], load_defaults: !!env['BOHU_DEFAULTS'])
       end
     end
 
@@ -59,24 +57,24 @@ module Bohu
 
   # Load config for given filepath.
   #
-  # @param [String|Hash] config
+  # @param [String, Hash, nil] config
   # @param [Boolean] load_defaults
   # @return [self]
   #
   # @see Bohu::Config
-  def configure(config = nil, load_defaults = true)
-    (@config_mutex ||= Mutex.new).synchronize do
-      @config = Config.new(config, load_defaults: load_defaults)
+  def configure(config = nil, load_defaults: true)
+    self.tap do
+      (@config_mutex ||= Mutex.new).synchronize do
+        @config = Bohu::Config.new(config, load_defaults: load_defaults)
+      end
     end
-
-    self
   end
 
   # @see #instance_for
   def method_missing(method, *args, &block)
     return super unless respond_to_missing?(method)
 
-    return instance_for(method).public_send(method, *args, &block)
+    instance_for(method).public_send(method, *args, &block)
   end
 
   # @see #instance_for
@@ -103,11 +101,11 @@ module Bohu
   #
   # @return [Array<Proc>]
   def callables
-    [Shell::Provider,
-     Commands::Shell,
-     Etc,
-     Filesystem::Provider].map do |klass|
-      -> { klass.new(config) }
-    end
+    [
+      Shell::Provider,
+      Commands::Shell,
+      Etc,
+      Filesystem::Provider
+    ].map { |klass| -> { klass.new(config) } }
   end
 end

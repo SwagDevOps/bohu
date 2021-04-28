@@ -23,7 +23,7 @@ describe Bohu, :bohu do
 
   it { expect(subject).to respond_to(:configure).with(0).arguments }
   it { expect(subject).to respond_to(:configure).with(1).arguments }
-  it { expect(subject).to respond_to(:configure).with(2).arguments }
+  # it { expect(subject).to respond_to(:configure).with(1).arguments.and.keywords(:load_defaults) }
 end
 
 # Only base mdoule/class is bundled, including moduile/class are not seen as bundled
@@ -46,7 +46,7 @@ describe Bohu, :bohu do
   # Using no config (no defaults, and no filepath given)
   let(:subject) do
     described_class.new.tap do |instance|
-      instance.configure(nil, false)
+      instance.configure(nil, load_defaults: false)
     end
   end
 
@@ -71,7 +71,7 @@ describe Bohu, :bohu do
   end
   let(:subject) do
     described_class.new.tap do |instance|
-      instance.configure(nil, false)
+      instance.configure(nil, load_defaults: false)
     end
   end
 
@@ -99,7 +99,7 @@ describe Bohu, :bohu do
   let(:described_class) { Class.new { include Bohu } }
   let(:subject) do
     described_class.new.tap do |instance|
-      instance.configure(nil, false)
+      instance.configure(nil, load_defaults: false)
     end
   end
 
