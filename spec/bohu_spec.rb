@@ -23,7 +23,8 @@ describe Bohu, :bohu do
 
   it { expect(subject).to respond_to(:configure).with(0).arguments }
   it { expect(subject).to respond_to(:configure).with(1).arguments }
-  # it { expect(subject).to respond_to(:configure).with(1).arguments.and.keywords(:load_defaults) }
+  it { expect(subject).to respond_to(:configure).with(0).arguments.and_keywords(:load_defaults) }
+  it { expect(subject).to respond_to(:configure).with(1).arguments.and_keywords(:load_defaults) }
 end
 
 # Only base mdoule/class is bundled, including moduile/class are not seen as bundled
