@@ -112,6 +112,7 @@ DEPENDENCIES
   github-markup (~> 2.0)
   interesting_methods (~> 0.1)
   kamaze-project!
+  kamaze-version (~> 1.0.2)
   listen (~> 3.1)
   pry (~> 0.11)
   pry-coolline (~> 0.2)

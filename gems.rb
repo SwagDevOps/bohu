@@ -16,8 +16,10 @@ group :development do
   gem 'listen', '~> 3.1'
   gem 'rubocop', '~> 1.0'
   gem 'rugged', '~> 1.0'
-  gem 'stibium-bundled', '~> 0.0.1', '>= 0.0.4'
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
+  # runtime ------------------------------
+  gem 'kamaze-version', '~> 1.0.2'
+  gem 'stibium-bundled', '~> 0.0.1', '>= 0.0.4'
   # repl ---------------------------------
   gem 'interesting_methods', '~> 0.1'
   gem 'pry', '~> 0.11'
