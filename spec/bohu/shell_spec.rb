@@ -2,8 +2,8 @@
 
 # class methods
 describe Bohu::Shell, :shell do
+  it { expect(described_class).to respond_to(:new).with(0).arguments }
   it { expect(described_class).to respond_to(:new).with(1).arguments }
-  it { expect(described_class).to respond_to(:new).with(2).arguments }
 end
 
 # const
