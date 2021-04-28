@@ -7,7 +7,6 @@
 # There is NO WARRANTY, to the extent permitted by law.
 
 $LOAD_PATH.unshift(__dir__)
-require_relative 'bohu/bundled'
 
 # Bohu module
 #
@@ -20,6 +19,7 @@ module Bohu
 
   {
     VERSION: :version,
+    Bundleable: :bundleable,
     Config: :config,
     Configurable: :configurable,
     Delegator: :delegator,
@@ -32,6 +32,8 @@ module Bohu
     Shell: :shell,
     Which: :which,
   }.each { |k, v| autoload k, "#{__dir__}/bohu/#{v}" }
+
+  include(Bundleable) unless ENV['BOHU_BUNDLED'] == 'false'
 
   # Get a read-only env representation.
   #
@@ -86,15 +88,15 @@ module Bohu
 
   # Get instance for given method.
   #
-  # @return [Object|nil]
+  # @return [Object, nil]
   def instance_for(method)
-    callables.each do |func|
-      func.call.tap do |instance|
-        return instance if instance.respond_to?(method)
+    nil.tap do
+      callables.each do |func|
+        func.call.tap do |instance|
+          return instance if instance.respond_to?(method)
+        end
       end
     end
-
-    nil
   end
 
   # Get callables.
