@@ -19,18 +19,43 @@ Gem::Specification.new do |s|
   # requires version >= 2.5.0 due to yield_self
   s.required_ruby_version = ">= 2.5.0"
   s.require_paths = ["lib"]
-  s.bindir        = "bin"
-  s.executables   = Dir.glob([s.bindir, "/*"].join)
-                       .select { |f| File.file?(f) and File.executable?(f) }
-                       .map { |f| File.basename(f) }
+
   s.files = [
     ".yardopts",
-    s.require_paths.map { |rp| [rp, "/**/*.rb"].join },
-    s.require_paths.map { |rp| [rp, "/**/*.yml"].join },
-  ].flatten
-   .map { |m| Dir.glob(m) }
-   .flatten
-   .push(*s.executables.map { |f| [s.bindir, f].join("/") })
+    "README.md",
+    "lib/bohu.rb",
+    "lib/bohu/bundleable.rb",
+    "lib/bohu/command.rb",
+    "lib/bohu/command/dialect.rb",
+    "lib/bohu/command/dialect/missing_error.rb",
+    "lib/bohu/command/runner.rb",
+    "lib/bohu/commands.rb",
+    "lib/bohu/commands/base_command.rb",
+    "lib/bohu/commands/callable.rb",
+    "lib/bohu/commands/loader.rb",
+    "lib/bohu/commands/shell.rb",
+    "lib/bohu/config.rb",
+    "lib/bohu/config_base.rb",
+    "lib/bohu/configurable.rb",
+    "lib/bohu/delegator.rb",
+    "lib/bohu/dot_hash.rb",
+    "lib/bohu/dot_hash/behavior.rb",
+    "lib/bohu/dsl.rb",
+    "lib/bohu/env.rb",
+    "lib/bohu/etc.rb",
+    "lib/bohu/filesystem.rb",
+    "lib/bohu/filesystem/provider.rb",
+    "lib/bohu/setup.rb",
+    "lib/bohu/shell.rb",
+    "lib/bohu/shell/capture.rb",
+    "lib/bohu/shell/exceptions.rb",
+    "lib/bohu/shell/provider.rb",
+    "lib/bohu/shell/result.rb",
+    "lib/bohu/utils.rb",
+    "lib/bohu/version.rb",
+    "lib/bohu/version.yml",
+    "lib/bohu/which.rb",
+  ]
 
   
 end
