@@ -26,11 +26,18 @@ describe Bohu, :bohu do
   it { expect(subject).to respond_to(:configure).with(2).arguments }
 end
 
-describe Bohu, :bohu do
-  let(:described_class) { Class.new { include Bohu } }
+# Only base mdoule/class is bundled, including moduile/class are not seen as bundled
+'.bundled?'.tap do |tested_method|
+  describe Bohu, :bohu do
+    context tested_method do
+      it { expect(subject.bundled?).to be(true) }
+    end
+  end
 
-  context '.bundled?' do
-    it { expect(subject.bundled?).to be(true) }
+  describe Class.new { include Bohu }, :bohu do
+    context tested_method do
+      it { expect(subject.bundled?).to be(false) }
+    end
   end
 end
 
