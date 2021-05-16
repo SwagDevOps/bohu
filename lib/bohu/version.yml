@@ -5,6 +5,9 @@ patch: 1
 authors: ['Dimitri Arrigoni']
 email: 'dimitri@arrigoni.me'
 date: '2017-08-14'
+# requires version >= 2.3.0 due to safe navigation operator &
+# requires version >= 2.5.0 due to yield_self
+required_ruby_version: '>= 2.5.0'
 summary: 'Before the creation of light'
 description: 'Easify some administrative tasks in primordial conditions'
 homepage: 'https://github.com/SwagDevOps/bohu'
