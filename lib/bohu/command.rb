@@ -90,10 +90,8 @@ class Bohu::Command < Array
   # @return [self]
   def prepare(options = {})
     self.clear.tap do
-      options
-        .map { |k, v| [k, [true, false].include?(v) ? v : v.to_s] }
-        .to_h.tap do |kwargs|
-        self.make_cmd(kwargs).each_with_index { |v, k| self[k] = v }
+      options.transform_values { |v| [true, false].include?(v) ? v : v.to_s }.to_h.tap do |kwargs|
+        self.make_cmd(**kwargs).each_with_index { |v, k| self[k] = v }
       end
     end
   end
@@ -144,10 +142,8 @@ class Bohu::Command < Array
 
   # @return [Array<String>]
   def make_args(**kwargs)
-    options = make_options(**kwargs)
-
-    dialect.transform(options.merge(kwargs)).map do |s|
-      begin
+    make_options(**kwargs).yield_self do |options|
+      dialect.transform(options.merge(kwargs)).map do |s|
         s % kwargs
       rescue KeyError => e
         raise ArgumentError, "missing keyword: #{e.key}"
