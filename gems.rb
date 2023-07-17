@@ -15,7 +15,7 @@ group :development do
   gem 'pry-coolline', '~> 0.2'
   # doc ----------------------------------
   gem 'github-markup', '~> 2.0'
-  gem 'redcarpet', '~> 3.4'
+  gem 'redcarpet', '~> 3.5'
   gem 'yard', '~> 0.9'
   gem 'yard-coderay', '~> 0.1'
 end
